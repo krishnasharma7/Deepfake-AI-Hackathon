@@ -1,0 +1,39 @@
+{% extends 'deepfake/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block head %}
+        <title>Home</title>
+    {% endblock %}
+    
+</head>
+<body>
+
+    {% block body %}
+    <div class="container">
+
+       {% for video in videos %}
+
+       <div class="row mt-4">
+            <div class="col-md-4 offset-md-3">
+                {% if video is not None %}
+                <h3 class="text-center mt-2 mb-2">{{video.caption}} :- {{ video.pred_class }}</h3>
+                <div class="embed-responsive embed-responsive-16by9"> <!-- Adjust height as needed -->
+                    <video class="embed-responsive-item" src="{{video.video.url}}" width="640" height="360" frameborder="0" controls="controls"></video>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    
+
+       {% endfor %}
+
+    </div>
+    {% endblock %}
+
+
+    
+</body>
+</html>

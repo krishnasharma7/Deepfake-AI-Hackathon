@@ -9,7 +9,7 @@ Original file is located at
 
 import tensorflow as tf
 
-loaded_model = tf.saved_model.load('/content/movinet-model-final')
+loaded_model = tf.saved_model.load('C:\\Users\\Manan Kher\\OneDrive\\Documents\\GitHack\\Deepfake-AI-Hackathon\\Hackathon model MoviNet\\movinet-model-final')
 
 import cv2
 
@@ -33,24 +33,28 @@ def get_frames(video_path, duration=5):
 
 import numpy as np
 
-path = "/content/agqphdxmwt.mp4"
+def predict():
+    path = "C:\\Users\\Manan Kher\\OneDrive\\Documents\\GitHack\\aagfhgtpmv.mp4"
+    test = get_frames(path)
+    test = [test]
+    test = np.array(test,dtype = np.float32)
 
-test = get_frames(path)
-test = [test]
-test = np.array(test,dtype = np.float32)
-test.shape
+    test = tf.convert_to_tensor(test)
 
-test = tf.convert_to_tensor(test)
+    concrete_func = loaded_model.signatures['serving_default']
 
-concrete_func = loaded_model.signatures['serving_default']
+    # Call the concrete function with the input tensor
+    output_dict = concrete_func(image=test)
 
-# Call the concrete function with the input tensor
-output_dict = concrete_func(image=test)
+    logits = output_dict['classifier_head_1']
+    logits = np.array(logits).reshape(-1)
 
-logits = output_dict['classifier_head_1']
-logits = np.array(logits).reshape(-1)
+    probabilities = tf.nn.softmax(logits)
+    probabilities = probabilities.numpy()
+    print("Predicted probabilities:", probabilities)
 
-probabilities = tf.nn.softmax(logits)
-probabilities = probabilities.numpy()
-print("Predicted probabilities:", probabilities)
+    print(probabilities[1])
+
+if __name__ == '__main__':
+    predict()
 
